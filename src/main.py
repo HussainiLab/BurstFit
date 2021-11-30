@@ -126,8 +126,8 @@ class mainWindow(QWidget):
         for family in families:
             self.modelBox.addItem(family)
         
-        self.graphBox.addItem("Rate graph")
-        self.graphBox.addItem("Rate vs Speed")
+        self.graphBox.addItem("Rate")
+        self.graphBox.addItem("Rate_vs_Speed")
         
         # Create canvas widgets used later for plotting image data
         self.rate_plot = MplCanvas()
@@ -159,6 +159,7 @@ class mainWindow(QWidget):
         quit_button.clicked.connect(self.quitClicked)
         browse_button.clicked.connect(self.runSession)
         self.listWidget.currentItemChanged.connect(self.cellChanged)
+        self.graphBox.activated[str].connect(self.graphChanged)
         self.modelBox.activated[str].connect(self.modelChanged)
         ppmTextBox.textChanged[str].connect(partial(self.textBoxChanged, 'ppm'))
                 
@@ -183,7 +184,8 @@ class mainWindow(QWidget):
         '''
 
         self.family = value
-        self.runWorkerThread()
+        if self.cell_data is not None:
+            self.runWorkerThread()
         
     # ------------------------------------------- #  
     
@@ -314,7 +316,6 @@ class mainWindow(QWidget):
     
     def errorOccured(self, error):
         
-        print("Yolo")
         # Prepare error dialog window 
         self.error_dialog = QErrorMessage()
         
@@ -369,8 +370,8 @@ class mainWindow(QWidget):
             self.rate_plot.axes.cla()
             self.rate_plot.axes.set_xlabel('Speed')
             self.rate_plot.axes.set_ylabel('Rate (Hz)')
-            self.rate_plot.axes.plot(self.x, self.y, linewidth=0.5)
-            self.rate_plot.axes.plot(self.x, self.prediction, linewidth=1)
+            self.rate_plot.axes.scatter(self.x, self.y, s=1)
+            self.rate_plot.axes.plot(self.x, self.prediction, color='green', linewidth=1, )
             self.rate_plot.draw()
             
     # ------------------------------------------- # 

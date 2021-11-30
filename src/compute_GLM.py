@@ -47,8 +47,8 @@ def compute_GLM(self, files, cell, ppm, family: str, graph: str, **kwargs):
     # Instantiate endogenous and exogenous variables 
     y1 = firing_data.flatten()
     x1 = pos_t.flatten()
-    y2 = speed.flatten()
-    x2 = pos_t.flatten()
+    y2 = firing_data.flatten()
+    x2 = speed.flatten()
     
     # Determine what model to predict with based on user choice
     model_rate = choose_GLM_model(x1, y1, family)
@@ -57,9 +57,7 @@ def compute_GLM(self, files, cell, ppm, family: str, graph: str, **kwargs):
     self.signals.progress.emit(75)
     
     # Predict 
-    
-    
-    if graph is 'Rate':
+    if graph == 'Rate':
         try:
             
             predictor = model_rate.fit()
@@ -78,11 +76,10 @@ def compute_GLM(self, files, cell, ppm, family: str, graph: str, **kwargs):
     else:
         try:
             
-            predictor = model_rate_and_speed.fit()
+            predictor_rate = model_rate_and_speed.fit()
             prediction = predictor_rate.predict(x2)
             
         except Exception as e:
-            
             error = str(e)
             self.signals.error.emit(error)
             return

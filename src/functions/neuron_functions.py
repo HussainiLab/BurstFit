@@ -186,48 +186,7 @@ def get_firing_rate_vs_time(times: np.ndarray, pos_t: np.ndarray, window: int) -
     rate_vector[index_values] = firing_rate
 
     return rate_vector, firing_time
-
-# =========================================================================== #  
-
-def get_firing_rate_vs_speed(firing_rate: np.ndarray, speed: np.ndarray, time: np.ndarray) -> list: 
-    
-    '''
-        Computes firing rate as a function of speed
-        
-        Params: 
-            firing_rate array (np.ndarray): 
-                Array returned from get_firing_rate_vs_time function.
-            speed (np.ndarray): 
-                Array of speeds of subject
-            time (np.ndarray): 
-                Time array of entire experiment
-            
-            Returns: 
-                list: 
-                    speed_bins
-                --------
-                speed_bins: 
-                    array of binned speeds, and a plot of firing rate vs. speed bins   
-    '''
-        
-    # initialze empty speed list
-    speed_bins = []
-    
-    # Iterate oer the firing rate and compute average speed per bin
-    for element in firing_rate:
-        bin_start = element[1]
-        bin_end = element[2]
-
-        # Find the indeices of start and end points in the speed array based on bin times
-        index_min = (np.abs(time - bin_start)).argmin() 
-        index_max = (np.abs(time - bin_end)).argmin() 
-               
-        # Compute the average speed between those bin times
-        average_speed_bin = sum(speed[index_min:index_max+1]) / (index_max - index_min + 1)
-        # Append
-        speed_bins.append(average_speed_bin)
-            
-    return speed_bins
+  
 # =========================================================================== #
 
 def choose_GLM_model(x: np.array, y: np.array, family: str):
